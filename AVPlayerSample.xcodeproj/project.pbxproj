@@ -15,6 +15,7 @@
 		EAFBECE61F0CC1E300791728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBECE51F0CC1E300791728 /* main.m */; };
 		EAFBECF01F0CC1E300791728 /* AVPlayerSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBECEF1F0CC1E300791728 /* AVPlayerSampleTests.m */; };
 		EAFBECFB1F0CC1E300791728 /* AVPlayerSampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBECFA1F0CC1E300791728 /* AVPlayerSampleUITests.m */; };
+		EAFBED0A1F0CC23200791728 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBED091F0CC23200791728 /* AVPlayerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EAA04A161F0F8102002C0BED /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		EAFBECD31F0CC1E300791728 /* AVPlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVPlayerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFBECD61F0CC1E300791728 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EAFBECD71F0CC1E300791728 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -51,6 +53,8 @@
 		EAFBECF61F0CC1E300791728 /* AVPlayerSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AVPlayerSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFBECFA1F0CC1E300791728 /* AVPlayerSampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVPlayerSampleUITests.m; sourceTree = "<group>"; };
 		EAFBECFC1F0CC1E300791728 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EAFBED081F0CC20B00791728 /* AVPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
+		EAFBED091F0CC23200791728 /* AVPlayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EAA04A151F0F8102002C0BED /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EAA04A161F0F8102002C0BED /* MediaPlayer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		EAFBECCA1F0CC1E300791728 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +97,7 @@
 				EAFBECEE1F0CC1E300791728 /* AVPlayerSampleTests */,
 				EAFBECF91F0CC1E300791728 /* AVPlayerSampleUITests */,
 				EAFBECD41F0CC1E300791728 /* Products */,
+				EAA04A151F0F8102002C0BED /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,6 +123,8 @@
 				EAFBECE11F0CC1E300791728 /* LaunchScreen.storyboard */,
 				EAFBECE41F0CC1E300791728 /* Info.plist */,
 				EAFBECE51F0CC1E300791728 /* main.m */,
+				EAFBED081F0CC20B00791728 /* AVPlayerView.h */,
+				EAFBED091F0CC23200791728 /* AVPlayerView.m */,
 			);
 			path = AVPlayerSample;
 			sourceTree = "<group>";
@@ -199,6 +214,11 @@
 				TargetAttributes = {
 					EAFBECD21F0CC1E300791728 = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					EAFBECEA1F0CC1E300791728 = {
 						CreatedOnToolsVersion = 9.0;
@@ -262,6 +282,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAFBED0A1F0CC23200791728 /* AVPlayerView.m in Sources */,
 				EAFBECDB1F0CC1E300791728 /* ViewController.m in Sources */,
 				EAFBECE61F0CC1E300791728 /* main.m in Sources */,
 				EAFBECD81F0CC1E300791728 /* AppDelegate.m in Sources */,
@@ -423,6 +444,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7RG7T5RZ77;
 				INFOPLIST_FILE = AVPlayerSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuta.AVPlayerSample;
@@ -435,6 +457,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7RG7T5RZ77;
 				INFOPLIST_FILE = AVPlayerSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuta.AVPlayerSample;
@@ -512,6 +535,7 @@
 				EAFBED011F0CC1E300791728 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EAFBED021F0CC1E300791728 /* Build configuration list for PBXNativeTarget "AVPlayerSampleTests" */ = {
 			isa = XCConfigurationList;
@@ -520,6 +544,7 @@
 				EAFBED041F0CC1E300791728 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EAFBED051F0CC1E300791728 /* Build configuration list for PBXNativeTarget "AVPlayerSampleUITests" */ = {
 			isa = XCConfigurationList;
@@ -528,6 +553,7 @@
 				EAFBED071F0CC1E300791728 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

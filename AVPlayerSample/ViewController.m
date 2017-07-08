@@ -155,12 +155,14 @@
 -(void) setUpRemoteControllers
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
-    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+//    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    float playbackState = 1;
     NSDictionary *contentInfo = @{
                                   MPMediaItemPropertyTitle:@"title",
                                   MPMediaItemPropertyArtist:@"artist",
-                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration]
+                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
+                                  MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
                                   };
 //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
     [center setNowPlayingInfo:contentInfo];
@@ -169,13 +171,20 @@
 -(void) updateRemoteControllers
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
-    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
-    if (_player.rate == 1.0) {
-//        [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-    } else {
-//        [playingInfo setObject:[NSNumber numberWithFloat:1] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    //    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    float playbackState = 1;
+    if (_player.rate == 0.0) {
+        playbackState = 0;
     }
-    [center setNowPlayingInfo:playingInfo];
+    NSDictionary *contentInfo = @{
+                                  MPMediaItemPropertyTitle:@"title",
+                                  MPMediaItemPropertyArtist:@"artist",
+                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
+                                  MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
+                                  };
+    //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [center setNowPlayingInfo:contentInfo];
 }
 
 

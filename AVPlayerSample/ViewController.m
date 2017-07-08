@@ -23,30 +23,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(applicationDidEnterBackground)
-               name:@"applicationDidEnterBackground" object:nil];
-    [nc addObserver:self selector:@selector(applicationWillEnterForeground)
-               name:@"applicationWillEnterForeground" object:nil];
-    [self playAudio];
+    [self pick];
 }
-    
-    // 再生時間とシークバー位置を連動させるためのタイマー
-//    const double interval = ( 0.5f * _slider.maximumValue ) / _slider.bounds.size.width;
-//    const CMTime time     = CMTimeMakeWithSeconds( interval, NSEC_PER_SEC );
-//    [_player addPeriodicTimeObserverForInterval:time
-//                                          queue:NULL
-//                                     usingBlock:^( CMTime time ) { [self syncSeekBar]; }];
 
-
-- (void)syncSeekBar
+- (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // スライダーの位置合わせ
-    Float64 duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    Float64 time     = CMTimeGetSeconds([_player currentTime]);
-    Float64 value    = ( _slider.maximumValue - _slider.minimumValue ) * time / duration + _slider.minimumValue;
-    [_slider setValue:value];
+    NSLog(@"ViewController : applicationDidEnterBackground");
+}
+
+// フォアグラウンド移行直前にコールされるメソッド
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    NSLog(@"ViewController : applicationWillEnterForeground");
+    
 }
 
 -(BOOL) playAudio
@@ -56,8 +45,8 @@
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
     NSError *setCategoryError = nil;
-    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-//    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
+//    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
         NSLog(@"naito : can not create audioSession");
         /* handle the error condition */
@@ -94,16 +83,17 @@
     return YES;
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void) pick
 {
-    NSLog(@"ViewController : applicationDidEnterBackground");
-}
-
-// フォアグラウンド移行直前にコールされるメソッド
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    NSLog(@"ViewController : applicationWillEnterForeground");
-    
+    NSLog(@"naito : pick!");
+    // MPMediaPickerControllerのインスタンスを作成
+    MPMediaPickerController *picker = [[MPMediaPickerController alloc]init];
+    // ピッカーのデリゲートを設定
+    picker.delegate = self;
+    // 複数選択を不可にする。（YESにすると、複数選択できる）
+    picker.allowsPickingMultipleItems = NO;
+    // ピッカーを表示する
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 @end

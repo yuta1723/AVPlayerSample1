@@ -15,6 +15,8 @@
 
 @property (nonatomic,strong) AVPlayerView *playerView;
 @property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic,strong) AVAudioSession *audioSession;
+
 @property (nonatomic) BOOL isFullScreen;
 
 @end
@@ -59,10 +61,10 @@
 - (BOOL)createAudioSessionInstance
 {
     //バックグラウンドでも再生できるようにCategoryを変更.
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    _audioSession = [AVAudioSession sharedInstance];
     
     NSError *setCategoryError = nil;
-    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+    BOOL success = [_audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
     //    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
         NSLog(@"naito : can not create audioSession");
@@ -71,7 +73,7 @@
     }
     
     NSError *activationError = nil;
-    success = [audioSession setActive:YES error:&activationError];
+    success = [_audioSession setActive:YES error:&activationError];
     if (!success) {
         NSLog(@"naito : can not active audioSession");
         /* handle the error condition */
@@ -90,16 +92,15 @@
     [self.view addSubview:_playerView];
     [self.view bringSubviewToFront:_playerView];
     
-    [self setUpRemoteControllers];
-    
     [self play];
+    [self setUpRemoteControllers];
+
     
 }
 -(BOOL) pause
 {
     NSLog(@"naito : pause");
     [_player pause];
-    
     return YES;
 }
 -(BOOL) play

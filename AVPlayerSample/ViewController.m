@@ -130,3 +130,5 @@
 
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/
 //background再生に関するrefhttps://developer.apple.com/library/content/qa/qa1668/_index.html#
+//controlCenterのrefはhttp://qiita.com/yimajo/items/c30c4d5f5eab06172028
+

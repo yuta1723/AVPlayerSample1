@@ -35,12 +35,16 @@
 
 - (void)applicationDidEnterBackground
 {
+    [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
+//    [[playerView playerLayer] setPlayer:nil]; // remove the player
     NSLog(@"ViewController : applicationDidEnterBackground");
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
 - (void)applicationWillEnterForeground
 {
+    [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
+//    [[playerView playerLayer] setPlayer:_player]; // restore the player
     NSLog(@"ViewController : applicationWillEnterForeground");
     
 }
@@ -52,8 +56,8 @@
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
     NSError *setCategoryError = nil;
-//    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
+    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+//    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
         NSLog(@"naito : can not create audioSession");
         /* handle the error condition */
@@ -76,10 +80,7 @@
     [self.view bringSubviewToFront:_playerView];
     
     //ビデオの長さ(Sec)を取得
-    Float64 duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    
-    // スライダーの最大値を設定
-    _slider.maximumValue = duration;
+//    Float64 duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     
     //再生.
 //    NSURL *url = [[NSBundle mainBundle] URLForResource:@"file_name"
@@ -88,19 +89,6 @@
     [_player play];
     
     return YES;
-}
-
-- (void) pick
-{
-    NSLog(@"naito : pick!");
-    // MPMediaPickerControllerのインスタンスを作成
-    MPMediaPickerController *picker = [[MPMediaPickerController alloc]init];
-    // ピッカーのデリゲートを設定
-    picker.delegate = self;
-    // 複数選択を不可にする。（YESにすると、複数選択できる）
-    picker.allowsPickingMultipleItems = NO;
-    // ピッカーを表示する
-    [self presentViewController:picker animated:YES completion:nil];
 }
 
 @end

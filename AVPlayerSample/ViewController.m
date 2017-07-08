@@ -120,7 +120,11 @@
 
 - (void)playOrPause
 {
-    [_player pause];
+    if (_player.rate == 1.0) {
+        [_player pause];
+    } else {
+        [_player play];
+    }
 }
 @end
 

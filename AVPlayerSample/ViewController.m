@@ -107,11 +107,21 @@
         switch (receivedEvent.subtype) {
                 
             case UIEventSubtypeRemoteControlPlay:
+                NSLog(@"pressed : UIEventSubtypeRemoteControlPlay");
+                break;
             case UIEventSubtypeRemoteControlPause:
+                NSLog(@"pressed : UIEventSubtypeRemoteControlPause");
+                break;
             case UIEventSubtypeRemoteControlTogglePlayPause:
+                NSLog(@"pressed : UIEventSubtypeRemoteControlTogglePlayPause");
                 [self playOrPause];
                 break;
-                
+            case UIEventSubtypeRemoteControlNextTrack:
+                NSLog(@"pressed : UIEventSubtypeRemoteControlNextTrack");
+                break;
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                NSLog(@"pressed : UIEventSubtypeRemoteControlPreviousTrack");
+                break;
             default:
                 break;
         }

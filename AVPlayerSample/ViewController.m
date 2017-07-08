@@ -92,3 +92,6 @@
 }
 
 @end
+
+//実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/
+//background再生に関するrefhttps://developer.apple.com/library/content/qa/qa1668/_index.html#

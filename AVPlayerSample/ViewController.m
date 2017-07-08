@@ -156,10 +156,11 @@
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
     NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     NSDictionary *contentInfo = @{
                                   MPMediaItemPropertyTitle:@"title",
                                   MPMediaItemPropertyArtist:@"artist",
-                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:20.0]
+                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration]
                                   };
 //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
     [center setNowPlayingInfo:contentInfo];

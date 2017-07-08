@@ -89,6 +89,9 @@
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
     [self.view addSubview:_playerView];
     [self.view bringSubviewToFront:_playerView];
+    
+    [self setUpRemoteControllers];
+    
     [self play];
     
 }
@@ -115,14 +118,17 @@
                 
             case UIEventSubtypeRemoteControlPlay:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlPlay");
-                [self play];
+                [self updateRemoteControllers];
+                [self pause];
                 break;
             case UIEventSubtypeRemoteControlPause:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlPause");
-                [self pause];
+                [self updateRemoteControllers];
+                [self play];
                 break;
             case UIEventSubtypeRemoteControlTogglePlayPause:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlTogglePlayPause");
+                [self updateRemoteControllers];
                 [self playOrPause];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
@@ -145,6 +151,32 @@
         [self play];
     }
 }
+
+-(void) setUpRemoteControllers
+{
+    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
+    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+    NSDictionary *contentInfo = @{
+                                  MPMediaItemPropertyTitle:@"title",
+                                  MPMediaItemPropertyArtist:@"artist",
+                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:20.0]
+                                  };
+//    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [center setNowPlayingInfo:contentInfo];
+}
+
+-(void) updateRemoteControllers
+{
+    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
+    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+    if (_player.rate == 1.0) {
+//        [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    } else {
+//        [playingInfo setObject:[NSNumber numberWithFloat:1] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    }
+    [center setNowPlayingInfo:playingInfo];
+}
+
 
 @end
 

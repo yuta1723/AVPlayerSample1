@@ -23,16 +23,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self pick];
+    
+    //AppDelegateからのnotificateを受信する
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(applicationDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
+    [nc addObserver:self selector:@selector(applicationWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
+    
+    [self playAudio];
+//    [self pick];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void)applicationDidEnterBackground
 {
     NSLog(@"ViewController : applicationDidEnterBackground");
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
-- (void)applicationWillEnterForeground:(UIApplication *)application
+- (void)applicationWillEnterForeground
 {
     NSLog(@"ViewController : applicationWillEnterForeground");
     

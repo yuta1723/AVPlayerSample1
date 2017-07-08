@@ -38,7 +38,7 @@
     [nc addObserver:self selector:@selector(viewDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
     [nc addObserver:self selector:@selector(viewWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
     
-    [self playAudio];
+    [self createPlayerInstance];
 }
 
 - (void)viewDidEnterBackground
@@ -56,16 +56,14 @@
     NSLog(@"ViewController : viewWillEnterForeground");
     
 }
-
--(BOOL) playAudio
+- (BOOL)createAudioSessionInstance
 {
-    NSLog(@"naito : playAudio!");
     //バックグラウンドでも再生できるようにCategoryを変更.
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
     NSError *setCategoryError = nil;
     BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-//    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
+    //    BOOL success = [audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
         NSLog(@"naito : can not create audioSession");
         /* handle the error condition */
@@ -79,25 +77,34 @@
         /* handle the error condition */
         return NO;
     }
-    
+    return YES;
+}
+
+- (void)createPlayerInstance
+{
+    [self createAudioSessionInstance];
     NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
     [self.view addSubview:_playerView];
     [self.view bringSubviewToFront:_playerView];
+    [self play];
     
+}
+-(BOOL) pause
+{
+    NSLog(@"naito : pause");
+    [_player pause];
+    
+    return YES;
+}
+-(BOOL) play
+{
+    NSLog(@"naito : play!");
     [_player play];
     
     return YES;
-    
-    //ビデオの長さ(Sec)を取得
-//    Float64 duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    
-    //再生.
-//    NSURL *url = [[NSBundle mainBundle] URLForResource:@"file_name"
-//                                         withExtension:@"mp4"];
-//    avPlayer = [[AVPlayer alloc] initWithURL:url];
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent
@@ -108,9 +115,11 @@
                 
             case UIEventSubtypeRemoteControlPlay:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlPlay");
+                [self play];
                 break;
             case UIEventSubtypeRemoteControlPause:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlPause");
+                [self pause];
                 break;
             case UIEventSubtypeRemoteControlTogglePlayPause:
                 NSLog(@"pressed : UIEventSubtypeRemoteControlTogglePlayPause");
@@ -131,11 +140,12 @@
 - (void)playOrPause
 {
     if (_player.rate == 1.0) {
-        [_player pause];
+        [self pause];
     } else {
-        [_player play];
+        [self play];
     }
 }
+
 @end
 
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/

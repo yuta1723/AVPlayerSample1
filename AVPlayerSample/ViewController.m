@@ -21,8 +21,17 @@
 
 @implementation ViewController
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self becomeFirstResponder];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
     
     //AppDelegateからのnotificateを受信する
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -91,6 +100,27 @@
     return YES;
 }
 
+- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent
+{
+    if (receivedEvent.type == UIEventTypeRemoteControl) {
+        
+        switch (receivedEvent.subtype) {
+                
+            case UIEventSubtypeRemoteControlPlay:
+            case UIEventSubtypeRemoteControlPause:
+            case UIEventSubtypeRemoteControlTogglePlayPause:
+                [self playOrPause];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+- (void)playOrPause
+{
+    [_player pause];
+}
 @end
 
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/

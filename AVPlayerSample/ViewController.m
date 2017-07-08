@@ -20,41 +20,40 @@
 @end
 
 @implementation ViewController
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self becomeFirstResponder];
+    NSLog(@"ViewController : viewWillAppear");
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    NSLog(@"ViewController : viewDidLoad");
+    [self becomeFirstResponder];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
     
     //AppDelegateからのnotificateを受信する
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(applicationDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
-    [nc addObserver:self selector:@selector(applicationWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
+    [nc addObserver:self selector:@selector(viewDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
+    [nc addObserver:self selector:@selector(viewWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
     
     [self playAudio];
-//    [self pick];
 }
 
-- (void)applicationDidEnterBackground
+- (void)viewDidEnterBackground
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
 //    [[playerView playerLayer] setPlayer:nil]; // remove the player
-    NSLog(@"ViewController : applicationDidEnterBackground");
+    NSLog(@"ViewController : viewDidEnterBackground");
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
-- (void)applicationWillEnterForeground
+- (void)viewWillEnterForeground
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
 //    [[playerView playerLayer] setPlayer:_player]; // restore the player
-    NSLog(@"ViewController : applicationWillEnterForeground");
+    NSLog(@"ViewController : viewWillEnterForeground");
     
 }
 
@@ -88,6 +87,10 @@
     [self.view addSubview:_playerView];
     [self.view bringSubviewToFront:_playerView];
     
+    [_player play];
+    
+    return YES;
+    
     //ビデオの長さ(Sec)を取得
 //    Float64 duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     
@@ -95,9 +98,6 @@
 //    NSURL *url = [[NSBundle mainBundle] URLForResource:@"file_name"
 //                                         withExtension:@"mp4"];
 //    avPlayer = [[AVPlayer alloc] initWithURL:url];
-    [_player play];
-    
-    return YES;
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent
@@ -117,6 +117,7 @@
         }
     }
 }
+
 - (void)playOrPause
 {
     [_player pause];

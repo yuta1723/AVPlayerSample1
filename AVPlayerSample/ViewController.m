@@ -104,7 +104,7 @@
     //addTargetを行うことで有効化された
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     [commandCenter.pauseCommand setEnabled:YES];
-    [commandCenter.pauseCommand addTarget:self action:@selector(onPushedplayCommand)];
+    [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
 //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
 //    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
     [commandCenter.skipBackwardCommand setEnabled:YES];
@@ -114,6 +114,39 @@
     
     [commandCenter.seekForwardCommand setEnabled:YES];
     [commandCenter.seekBackwardCommand setEnabled:YES];
+}
+
+-(BOOL) onPushedPlayCommand
+{
+    NSLog(@"AVPlayerSample : onPushedplayCommand");
+    [self play];
+    
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [commandCenter.pauseCommand setEnabled:YES];
+    [commandCenter.playCommand setEnabled:NO];
+    [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
+    
+    return YES;
+}
+
+-(BOOL) onPushedPauseCommand
+{
+    NSLog(@"AVPlayerSample : onPushedPauseCommand");
+    [self pause];
+    
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [commandCenter.playCommand setEnabled:YES];
+    [commandCenter.pauseCommand setEnabled:NO];
+    [commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
+    
+    return YES;
+}
+
+-(BOOL) onPushedtoggleCommand
+{
+    NSLog(@"AVPlayerSample : onPushedtoggleCommand");
+    [self playOrPause];
+    return YES;
 }
 
 -(BOOL) onPushedPreCommand
@@ -136,23 +169,6 @@
 {
     NSLog(@"AVPlayerSample : onSkipForwardCommand");
     [self seekForward];
-    
-    return YES;
-}
-
--(BOOL) onPushedplayCommand
-{
-    NSLog(@"AVPlayerSample : onPushedplayCommand");
-    [self pause];
-    
-    
-    return YES;
-}
-
--(BOOL) onPushedtoggleCommand
-{
-    NSLog(@"AVPlayerSample : pause");
-    [self playOrPause];
     
     return YES;
 }

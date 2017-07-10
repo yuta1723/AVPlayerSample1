@@ -27,12 +27,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"ViewController : viewWillAppear");
+    NSLog(@"AVPlayerSample : viewWillAppear");
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"ViewController : viewDidLoad");
+    NSLog(@"AVPlayerSample : viewDidLoad");
     [self becomeFirstResponder];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
@@ -50,7 +50,7 @@
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
 //    [[playerView playerLayer] setPlayer:nil]; // remove the player
-    NSLog(@"ViewController : viewDidEnterBackground");
+    NSLog(@"AVPlayerSample : viewDidEnterBackground");
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
@@ -58,7 +58,7 @@
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
 //    [[playerView playerLayer] setPlayer:_player]; // restore the player
-    NSLog(@"ViewController : viewWillEnterForeground");
+    NSLog(@"AVPlayerSample : viewWillEnterForeground");
     
 }
 - (BOOL)createAudioSessionInstance
@@ -70,7 +70,7 @@
     BOOL success = [_audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
 //        BOOL success = [_audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
-        NSLog(@"naito : can not create audioSession");
+        NSLog(@"AVPlayerSample : can not create audioSession");
         /* handle the error condition */
 //        return NO;
     }
@@ -78,7 +78,7 @@
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
     if (!success) {
-        NSLog(@"naito : can not active audioSession");
+        NSLog(@"AVPlayerSample : can not active audioSession");
         /* handle the error condition */
         return NO;
     }
@@ -118,7 +118,7 @@
 
 -(BOOL) onPushedPreCommand
 {
-    NSLog(@"naito : onPushedPreCommand");
+    NSLog(@"AVPlayerSample : onPushedPreCommand");
     [self playOrPause];
     
     return YES;
@@ -126,39 +126,32 @@
 
 -(BOOL) onSkipBackwardCommand
 {
-    NSLog(@"naito : onSkipBackwardCommand");
-    [self playOrPause];
+    NSLog(@"AVPlayerSample : onSkipBackwardCommand");
+    [self seekBackward];
     
     return YES;
 }
 
 -(BOOL) onSkipForwardCommand
 {
-    NSLog(@"naito : onSkipForwardCommand");
-    [self playOrPause];
-    
-    return YES;
-}
-
--(BOOL) onPushedForwardCommand
-{
-    NSLog(@"naito : onPushedForwardCommand");
-    [self playOrPause];
+    NSLog(@"AVPlayerSample : onSkipForwardCommand");
+    [self seekForward];
     
     return YES;
 }
 
 -(BOOL) onPushedplayCommand
 {
-    NSLog(@"naito : onPushedplayCommand");
+    NSLog(@"AVPlayerSample : onPushedplayCommand");
     [self pause];
+    
     
     return YES;
 }
 
 -(BOOL) onPushedtoggleCommand
 {
-    NSLog(@"naito : pause");
+    NSLog(@"AVPlayerSample : pause");
     [self playOrPause];
     
     return YES;
@@ -166,63 +159,18 @@
 
 -(BOOL) pause
 {
-    NSLog(@"naito : pause");
+    NSLog(@"AVPlayerSample : pause");
     [_player pause];
     
     return YES;
 }
 -(BOOL) play
 {
-    NSLog(@"naito : play!");
+    NSLog(@"AVPlayerSample : play!");
     [_player play];
     
     return YES;
 }
-
-//- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent
-//{
-//    if (receivedEvent.type == UIEventTypeRemoteControl) {
-//
-//        switch (receivedEvent.subtype) {
-//
-//            case UIEventSubtypeRemoteControlPlay:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlPlay");
-////                [self updateRemoteControllers];
-//                [self pause];
-//                break;
-//            case UIEventSubtypeRemoteControlPause:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlPause");
-////                [self updateRemoteControllers];
-//                [self play];
-//                break;
-////            case UIEventSubtypeRemoteControlTogglePlayPause:
-////                NSLog(@"pressed : UIEventSubtypeRemoteControlTogglePlayPause");
-//////                [self updateRemoteControllers];
-////                [self playOrPause];
-////                break;
-//            case UIEventSubtypeRemoteControlNextTrack:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlNextTrack");
-//                break;
-//            case UIEventSubtypeRemoteControlPreviousTrack:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlPreviousTrack");
-//                break;
-//            case UIEventSubtypeRemoteControlBeginSeekingBackward:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlBeginSeekingBackward");
-//                break;
-//            case UIEventSubtypeRemoteControlBeginSeekingForward:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlBeginSeekingForward");
-//                break;
-//            case UIEventSubtypeRemoteControlEndSeekingBackward:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlEndSeekingBackward");
-//                break;
-//            case UIEventSubtypeRemoteControlEndSeekingForward:
-//                NSLog(@"pressed : UIEventSubtypeRemoteControlEndSeekingForward");
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//}
 
 - (void)playOrPause
 {
@@ -231,6 +179,36 @@
     } else {
         [self play];
     }
+}
+
+- (void)seekForward
+{
+    NSLog(@"AVPlayerSample : seekForward");
+    double currentPosition = CMTimeGetSeconds(_player.currentTime);
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    NSLog(@"AVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"AVPlayerSample : duration:%f", duration);
+    CMTime time = CMTimeMakeWithSeconds(duration - 10 , NSEC_PER_SEC);
+    if (currentPosition + 15 < duration) {
+        time = CMTimeMakeWithSeconds(currentPosition + 15, NSEC_PER_SEC);
+    }
+    [_player seekToTime:time];
+}
+
+- (void)seekBackward
+{
+    NSLog(@"AVPlayerSample : seekBackward");
+    double currentPosition = CMTimeGetSeconds([_player currentTime]);
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    NSLog(@"AVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"AVPlayerSample : duration:%f", duration);
+    CMTime time = CMTimeMakeWithSeconds(0, NSEC_PER_SEC);
+    if (currentPosition - 15 > 0) {
+        time = CMTimeMakeWithSeconds(currentPosition - 15, NSEC_PER_SEC);
+    }
+    [_player seekToTime:time];
+    
+    
 }
 
 -(void) setUpRemoteControllers

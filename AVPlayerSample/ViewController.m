@@ -27,12 +27,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"AVPlayerSample : viewWillAppear");
+    NSLog(@"NaitoAVPlayerSample : viewWillAppear");
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"AVPlayerSample : viewDidLoad");
+    NSLog(@"NaitoAVPlayerSample : viewDidLoad");
     [self becomeFirstResponder];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
@@ -50,7 +50,7 @@
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
 //    [[playerView playerLayer] setPlayer:nil]; // remove the player
-    NSLog(@"AVPlayerSample : viewDidEnterBackground");
+    NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
@@ -58,7 +58,7 @@
 {
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
 //    [[playerView playerLayer] setPlayer:_player]; // restore the player
-    NSLog(@"AVPlayerSample : viewWillEnterForeground");
+    NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     
 }
 - (BOOL)createAudioSessionInstance
@@ -70,7 +70,7 @@
     BOOL success = [_audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
 //        BOOL success = [_audioSession setCategory:AVAudioSessionCategoryAmbient error:&setCategoryError];
     if (!success) {
-        NSLog(@"AVPlayerSample : can not create audioSession");
+        NSLog(@"NaitoAVPlayerSample : can not create audioSession");
         /* handle the error condition */
 //        return NO;
     }
@@ -78,7 +78,7 @@
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
     if (!success) {
-        NSLog(@"AVPlayerSample : can not active audioSession");
+        NSLog(@"NaitoAVPlayerSample : can not active audioSession");
         /* handle the error condition */
         return NO;
     }
@@ -112,13 +112,24 @@
     [commandCenter.skipForwardCommand setEnabled:YES];
     [commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
     
-    [commandCenter.seekForwardCommand setEnabled:YES];
-    [commandCenter.seekBackwardCommand setEnabled:YES];
+    NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
+    [[[MPRemoteCommandCenter sharedCommandCenter] changePlaybackPositionCommand]
+     performSelector:@selector(setCanBeControlledByScrubbing:) withObject:shouldScrub];
+    
+    [commandCenter.changePlaybackPositionCommand setEnabled:YES];
+    [commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
+    
+//    [commandCenter.seekForwardCommand setEnabled:YES];
+//    [commandCenter.seekForwardCommand addTarget:self action:@selector(onSeekForwardCommand:)];
+//
+//    [commandCenter.seekBackwardCommand setEnabled:YES];
+//    [commandCenter.seekBackwardCommand addTarget:self action:@selector(onSeekBackwardCommand:)];
+    
 }
 
 -(BOOL) onPushedPlayCommand
 {
-    NSLog(@"AVPlayerSample : onPushedplayCommand");
+    NSLog(@"NaitoAVPlayerSample : onPushedplayCommand");
     [self play];
     
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
@@ -131,7 +142,7 @@
 
 -(BOOL) onPushedPauseCommand
 {
-    NSLog(@"AVPlayerSample : onPushedPauseCommand");
+    NSLog(@"NaitoAVPlayerSample : onPushedPauseCommand");
     [self pause];
     
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
@@ -144,14 +155,14 @@
 
 -(BOOL) onPushedtoggleCommand
 {
-    NSLog(@"AVPlayerSample : onPushedtoggleCommand");
+    NSLog(@"NaitoAVPlayerSample : onPushedtoggleCommand");
     [self playOrPause];
     return YES;
 }
 
 -(BOOL) onPushedPreCommand
 {
-    NSLog(@"AVPlayerSample : onPushedPreCommand");
+    NSLog(@"NaitoAVPlayerSample : onPushedPreCommand");
     [self playOrPause];
     
     return YES;
@@ -159,30 +170,59 @@
 
 -(BOOL) onSkipBackwardCommand
 {
-    NSLog(@"AVPlayerSample : onSkipBackwardCommand");
-    [self seekBackward];
+    NSLog(@"NaitoAVPlayerSample : onSkipBackwardCommand");
+    [self skipBackward];
     
     return YES;
 }
 
 -(BOOL) onSkipForwardCommand
 {
-    NSLog(@"AVPlayerSample : onSkipForwardCommand");
-    [self seekForward];
+    NSLog(@"NaitoAVPlayerSample : onSkipForwardCommand");
+    [self skipForward];
+    
+    return YES;
+}
+
+-(BOOL) onSeekBackwardCommand:(MPSkipIntervalCommandEvent *)skipEvent
+{
+    NSLog(@"NaitoAVPlayerSample : onSkipBackwardCommand");
+    NSLog(@"NaitoAVPlayerSample : skip by %f",skipEvent.interval);
+    
+    [self seekBackward:skipEvent.interval];
+    
+    return YES;
+}
+
+-(BOOL) onChangePositionCommand:(MPChangePlaybackPositionCommandEvent *)event
+{
+    NSLog(@"NaitoAVPlayerSample : onChangePositionCommand");
+    NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
+    
+//    [self seekBackward:event.positionTime];
+    
+    return YES;
+}
+
+-(BOOL) onSeekForwardCommand:(MPSkipIntervalCommandEvent *)skipEvent
+{
+    NSLog(@"NaitoAVPlayerSample : onSeekForwardCommand");
+    NSLog(@"NaitoAVPlayerSample : skip by %f",skipEvent.interval);
+    [self seekForward:skipEvent.interval];
     
     return YES;
 }
 
 -(BOOL) pause
 {
-    NSLog(@"AVPlayerSample : pause");
+    NSLog(@"NaitoAVPlayerSample : pause");
     [_player pause];
     
     return YES;
 }
 -(BOOL) play
 {
-    NSLog(@"AVPlayerSample : play!");
+    NSLog(@"NaitoAVPlayerSample : play!");
     [_player play];
     
     return YES;
@@ -197,13 +237,13 @@
     }
 }
 
-- (void)seekForward
+- (void)skipForward
 {
-    NSLog(@"AVPlayerSample : seekForward");
+    NSLog(@"NaitoAVPlayerSample : skipForward");
     double currentPosition = CMTimeGetSeconds(_player.currentTime);
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    NSLog(@"AVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"AVPlayerSample : duration:%f", duration);
+    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
     CMTime time = CMTimeMakeWithSeconds(duration - 10 , NSEC_PER_SEC);
     if (currentPosition + 15 < duration) {
         time = CMTimeMakeWithSeconds(currentPosition + 15, NSEC_PER_SEC);
@@ -211,20 +251,40 @@
     [_player seekToTime:time];
 }
 
-- (void)seekBackward
+- (void)skipBackward
 {
-    NSLog(@"AVPlayerSample : seekBackward");
+    NSLog(@"NaitoAVPlayerSample : skipBackward");
     double currentPosition = CMTimeGetSeconds([_player currentTime]);
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    NSLog(@"AVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"AVPlayerSample : duration:%f", duration);
+    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
     CMTime time = CMTimeMakeWithSeconds(0, NSEC_PER_SEC);
     if (currentPosition - 15 > 0) {
         time = CMTimeMakeWithSeconds(currentPosition - 15, NSEC_PER_SEC);
     }
     [_player seekToTime:time];
-    
-    
+}
+
+- (void)seekForward : (long)seekPosition
+{
+    NSLog(@"NaitoAVPlayerSample : seekForward");
+    double currentPosition = CMTimeGetSeconds(_player.currentTime);
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
+    CMTime time = CMTimeMakeWithSeconds(seekPosition, NSEC_PER_SEC);
+    [_player seekToTime:time];
+}
+
+- (void)seekBackward : (long)seekPosition
+{
+    NSLog(@"NaitoAVPlayerSample : seekBackward");
+    double currentPosition = CMTimeGetSeconds([_player currentTime]);
+    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
+    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
+    CMTime time = CMTimeMakeWithSeconds(seekPosition, NSEC_PER_SEC);
+    [_player seekToTime:time];
 }
 
 -(void) setUpRemoteControllers
@@ -269,4 +329,5 @@
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/
 //background再生に関するrefhttps://developer.apple.com/library/content/qa/qa1668/_index.html#
 //controlCenterのrefはhttp://qiita.com/yimajo/items/c30c4d5f5eab06172028
+//https://forums.developer.apple.com/thread/44619
 

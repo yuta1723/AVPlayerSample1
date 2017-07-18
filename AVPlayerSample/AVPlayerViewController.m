@@ -80,6 +80,7 @@
     
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeAudioSessionRoute:) name:AVAudioSessionRouteChangeNotification object:nil];
     _audioSession.delegate = self;
     if (!success) {
         NSLog(@"NaitoAVPlayerSample : can not active audioSession");
@@ -360,6 +361,44 @@
     [self playOrPause];
     
 }
+
+- (void)didChangeAudioSessionRoute:(NSNotification *)notification
+{
+    NSLog(@"didChangeAudioSessionRoute");
+    // ヘッドホンが刺さっていたか取得
+    BOOL (^isJointHeadphone)(NSArray *) = ^(NSArray *outputs){
+        for (AVAudioSessionPortDescription *desc in outputs) {
+            if ([desc.portType isEqual:AVAudioSessionPortHeadphones]) {
+                return YES;
+            }
+        }
+        return NO;
+    };
+    
+    // 直前の状態を取得
+    AVAudioSessionRouteDescription *prevDesc = notification.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
+    
+    if (isJointHeadphone([[[AVAudioSession sharedInstance] currentRoute] outputs])) {
+        if (!isJointHeadphone(prevDesc.outputs)) {
+            NSLog(@"put out headphone");
+        }
+    } else {
+        if(isJointHeadphone(prevDesc.outputs)) {
+            NSLog(@"put in headphone");
+        }
+    }
+}
+//- (void)didChangeAudioSessionRoute:(NSNotification *)notification
+//{
+//    NSLog(@"didChangeAudioSessionRoute");
+//    for (AVAudioSessionPortDescription *desc in [[[AVAudioSession sharedInstance] currentRoute] outputs]) {
+//        if ([desc.portType isEqual:AVAudioSessionPortHeadphones]) {
+//            NSLog(@"ヘッドホン刺さった");
+//        } else {
+//            NSLog(@"ヘッドホン抜けた");
+//        }
+//    }
+//}
 
 
 @end

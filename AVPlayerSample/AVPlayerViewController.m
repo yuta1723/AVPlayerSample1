@@ -80,6 +80,7 @@
     
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
+    _audioSession.delegate = self;
     if (!success) {
         NSLog(@"NaitoAVPlayerSample : can not active audioSession");
         /* handle the error condition */
@@ -91,7 +92,8 @@
 - (void)createPlayerInstance
 {
     [self createAudioSessionInstance];
-    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
+    NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/mp4_content/bbb.mp4"];
+//    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
     [self attachRemoteCommandCenter];
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
@@ -343,6 +345,20 @@
                                   };
     //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
     [center setNowPlayingInfo:contentInfo];
+}
+
+- (void)beginInterruption
+{
+    //自動で再生中止するのでそのときの処理
+    NSLog(@"stop playing audio");
+}
+
+- (void)endInterruptionWithFlags:(NSUInteger)flags
+{
+    //再生再開させるようにする
+    NSLog(@"start playing audio");
+    [self playOrPause];
+    
 }
 
 

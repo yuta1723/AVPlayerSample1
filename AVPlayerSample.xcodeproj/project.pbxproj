@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EAD2DE851F1DC35600C446FF /* AVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD2DE841F1DC35600C446FF /* AVPlayerViewController.m */; };
 		EAFBECD81F0CC1E300791728 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBECD71F0CC1E300791728 /* AppDelegate.m */; };
 		EAFBECDB1F0CC1E300791728 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFBECDA1F0CC1E300791728 /* ViewController.m */; };
 		EAFBECDE1F0CC1E300791728 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAFBECDC1F0CC1E300791728 /* Main.storyboard */; };
@@ -37,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		EAA04A161F0F8102002C0BED /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		EAD2DE841F1DC35600C446FF /* AVPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVPlayerViewController.m; sourceTree = "<group>"; };
+		EAD2DE861F1DC37000C446FF /* AVPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVPlayerViewController.h; sourceTree = "<group>"; };
 		EAFBECD31F0CC1E300791728 /* AVPlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVPlayerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFBECD61F0CC1E300791728 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EAFBECD71F0CC1E300791728 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -125,6 +128,8 @@
 				EAFBECE51F0CC1E300791728 /* main.m */,
 				EAFBED081F0CC20B00791728 /* AVPlayerView.h */,
 				EAFBED091F0CC23200791728 /* AVPlayerView.m */,
+				EAD2DE841F1DC35600C446FF /* AVPlayerViewController.m */,
+				EAD2DE861F1DC37000C446FF /* AVPlayerViewController.h */,
 			);
 			path = AVPlayerSample;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAD2DE851F1DC35600C446FF /* AVPlayerViewController.m in Sources */,
 				EAFBED0A1F0CC23200791728 /* AVPlayerView.m in Sources */,
 				EAFBECDB1F0CC1E300791728 /* ViewController.m in Sources */,
 				EAFBECE61F0CC1E300791728 /* main.m in Sources */,

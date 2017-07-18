@@ -1,16 +1,16 @@
 //
 //  ViewController.h
-//  AVPlayerSample
+//  ScreenTransitionSample
 //
-//  Created by y.naito on 2017/07/05.
+//  Created by y.naito on 2017/07/14.
 //  Copyright © 2017年 y.naito. All rights reserved.
 //
 
-
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
 
 @interface ViewController : UIViewController
 
-//@interface ViewController : UIView
+
 @end
+
+

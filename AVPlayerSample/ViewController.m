@@ -199,7 +199,7 @@
     NSLog(@"NaitoAVPlayerSample : onChangePositionCommand");
     NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
     
-//    [self seekBackward:event.positionTime];
+    [self seekBackward:event.positionTime];
     
     return YES;
 }

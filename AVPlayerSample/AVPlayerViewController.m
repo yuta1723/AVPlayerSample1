@@ -46,6 +46,8 @@
     
     [self createPlayerInstance];
     [self createButton];
+    [self createPlayPauseButton];
+    
     
 }
 
@@ -119,9 +121,32 @@
     [self.view addSubview:button];
 }
 
+- (void)createPlayPauseButton
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    int screenWidth = self.view.frame.size.width;
+    button.frame = CGRectMake((screenWidth/2 - 100/2), 550, 100, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"pause" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playPauseButton:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
 -(void)moveButton:(UIButton*)button{
     ViewController *rootVC = [[ViewController alloc] init];
     [self presentViewController: rootVC animated:YES completion: nil];
+}
+
+-(void)playPauseButton:(UIButton*)button{
+    if (_player.rate == 1.0) {
+        [self pause];
+        [button setTitle:@"play" forState:UIControlStateNormal];
+    } else {
+        [self play];
+        [button setTitle:@"pause" forState:UIControlStateNormal];
+        
+    }
 }
 
 

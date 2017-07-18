@@ -20,6 +20,8 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic,strong) AVAudioSession *audioSession;
 
+@property (nonatomic,strong) UIButton *playpausebutton;
+
 @property (nonatomic) BOOL isFullScreen;
 
 @end
@@ -123,14 +125,14 @@
 
 - (void)createPlayPauseButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _playpausebutton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     int screenWidth = self.view.frame.size.width;
-    button.frame = CGRectMake((screenWidth/2 - 100/2), 550, 100, 30);
-    button.backgroundColor = [UIColor grayColor];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitle:@"pause" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(playPauseButton:)forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:button];
+    _playpausebutton.frame = CGRectMake((screenWidth/2 - 100/2), 550, 100, 30);
+    _playpausebutton.backgroundColor = [UIColor grayColor];
+    [_playpausebutton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_playpausebutton setTitle:@"pause" forState:UIControlStateNormal];
+    [_playpausebutton addTarget:self action:@selector(playPauseButton:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:_playpausebutton];
 }
 
 -(void)moveButton:(UIButton*)button{
@@ -405,11 +407,14 @@
     
     if (isJointHeadphone([[[AVAudioSession sharedInstance] currentRoute] outputs])) {
         if (!isJointHeadphone(prevDesc.outputs)) {
-            NSLog(@"put out headphone");
+            NSLog(@"put in headphone");
+            //ヘッドフォンが刺さった
         }
     } else {
         if(isJointHeadphone(prevDesc.outputs)) {
-            NSLog(@"put in headphone");
+            //ヘッドフォンが抜かれた
+            NSLog(@"put out headphone");
+            [_playpausebutton setTitle:@"play" forState:UIControlStateNormal];
         }
     }
 }

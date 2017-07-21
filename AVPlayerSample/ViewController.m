@@ -37,7 +37,8 @@
 
 -(void)moveButton:(UIButton*)button{
     AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
-    [self presentViewController: secondVC animated:YES completion: nil];
+    [self.navigationController pushViewController:secondVC animated:YES];
+//    [self presentViewController: secondVC animated:YES completion: nil];
 }
 
 - (void)didReceiveMemoryWarning {

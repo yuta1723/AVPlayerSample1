@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
+
 
 @interface AppDelegate ()
 
@@ -15,8 +17,23 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    
+    //最初に表示されるviewControllerを作る
+    //make view controller which will be displayed first
+    ViewController* baseViewCtrl = [[ViewController alloc]init];
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    
+    baseViewCtrl.view.frame = CGRectMake(0,0,bounds.size.width, bounds.size.height);
+    
+    //make navigation controller and make it as root
+    //UINavigationControllerを作り、rootViewControlelrにする。
+    UINavigationController* navCtrl=[[UINavigationController alloc] initWithRootViewController:baseViewCtrl ];
+    self.window.rootViewController   = navCtrl;
+    
+    
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

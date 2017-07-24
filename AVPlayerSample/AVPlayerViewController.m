@@ -47,10 +47,8 @@
     
     
     [self createPlayerInstance];
-    [self createButton];
     [self createPlayPauseButton];
-    
-    
+
 }
 
 - (void)viewDidEnterBackground
@@ -111,23 +109,11 @@
     
 }
 
-- (void)createButton
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    int screenWidth = self.view.frame.size.width;
-    button.frame = CGRectMake((screenWidth/2 - 100/2), 400, 100, 30);
-    button.backgroundColor = [UIColor grayColor];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitle:@"Move Scene" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(moveButton:)forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:button];
-}
-
 - (void)createPlayPauseButton
 {
     _playpausebutton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     int screenWidth = self.view.frame.size.width;
-    _playpausebutton.frame = CGRectMake((screenWidth/2 - 100/2), 550, 100, 30);
+    _playpausebutton.frame = CGRectMake((screenWidth/2 - 100/2), 400, 100, 30);
     _playpausebutton.backgroundColor = [UIColor grayColor];
     [_playpausebutton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_playpausebutton setTitle:@"pause" forState:UIControlStateNormal];

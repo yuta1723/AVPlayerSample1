@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     UILabel *firstLabel = [[UILabel alloc] init];
     int screenWidth = self.view.frame.size.width;
     

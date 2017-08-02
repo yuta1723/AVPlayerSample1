@@ -60,7 +60,7 @@
     
     [self createPlayerInstance];
     [self createPlayPauseButton];
-
+    
 }
 
 - (void)viewDidEnterBackground
@@ -153,6 +153,10 @@
 - (void) attachRemoteCommandCenter {
     //addTargetを行うことで有効化された
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [commandCenter.likeCommand setEnabled:YES];
+    [commandCenter.likeCommand addTarget:self action:@selector(onPushedLikeCommand)];
+    [commandCenter.dislikeCommand setEnabled:YES];
+    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
     [commandCenter.pauseCommand setEnabled:YES];
     [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
@@ -186,6 +190,20 @@
     [commandCenter.pauseCommand setEnabled:YES];
     [commandCenter.playCommand setEnabled:NO];
     [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
+    
+    return YES;
+}
+
+-(BOOL) onPushedLikeCommand
+{
+    NSLog(@"NaitoAVPlayerSample : onPushedLikeCommand");
+    
+    return YES;
+}
+
+-(BOOL) onPushedDisLikeCommand
+{
+    NSLog(@"NaitoAVPlayerSample : onPushedLikeCommand");
     
     return YES;
 }

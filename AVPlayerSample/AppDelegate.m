@@ -31,7 +31,7 @@
     //UINavigationControllerを作り、rootViewControlelrにする。
     UINavigationController* navCtrl=[[UINavigationController alloc] initWithRootViewController:baseViewCtrl ];
     self.window.rootViewController = navCtrl;
-    
+
     
     [self.window makeKeyAndVisible];
     return YES;

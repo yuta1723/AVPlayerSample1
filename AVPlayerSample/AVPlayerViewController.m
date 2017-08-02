@@ -35,6 +35,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor yellowColor];  // バーアイテムカラー
+    self.navigationController.navigationBar.barTintColor = [UIColor blueColor];  // バー背景色
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+    title.font = [UIFont boldSystemFontOfSize:16.0];
+    title.textColor = [UIColor greenColor];
+    title.text = @"再生画面";
+    [title sizeToFit];
+    self.navigationItem.titleView = title;
+    
     [self.view setBackgroundColor:[UIColor whiteColor]];
     NSLog(@"NaitoAVPlayerSample : viewDidLoad");
     [self becomeFirstResponder];

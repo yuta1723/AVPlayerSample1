@@ -153,17 +153,19 @@
 - (void) attachRemoteCommandCenter {
     //addTargetを行うことで有効化された
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    [commandCenter.likeCommand setEnabled:YES];
-    [commandCenter.likeCommand addTarget:self action:@selector(onPushedLikeCommand)];
-    [commandCenter.dislikeCommand setEnabled:YES];
-    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
+//    [commandCenter.likeCommand setEnabled:YES];
+//    [commandCenter.likeCommand addTarget:self action:@selector(onPushedLikeCommand)];
+//    [commandCenter.dislikeCommand setEnabled:YES];
+//    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
     [commandCenter.pauseCommand setEnabled:YES];
     [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
     //    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
     [commandCenter.skipBackwardCommand setEnabled:YES];
+    [commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
     [commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
     [commandCenter.skipForwardCommand setEnabled:YES];
+    [commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
     [commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
     
     NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
@@ -453,5 +455,6 @@
 //background再生に関するrefhttps://developer.apple.com/library/content/qa/qa1668/_index.html#
 //controlCenterのrefはhttp://qiita.com/yimajo/items/c30c4d5f5eab06172028
 //https://forums.developer.apple.com/thread/44619
+//https://stackoverflow.com/questions/20591156/is-there-a-public-way-to-force-mpnowplayinginfocenter-to-show-podcast-controls
 
 

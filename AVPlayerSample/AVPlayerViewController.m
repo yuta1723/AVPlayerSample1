@@ -21,6 +21,8 @@
 @property (nonatomic,strong) AVAudioSession *audioSession;
 
 @property (nonatomic,strong) UIButton *playpausebutton;
+@property MPRemoteCommandCenter *commandCenter;
+
 
 @property (nonatomic) BOOL isFullScreen;
 
@@ -56,6 +58,7 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(viewDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
     [nc addObserver:self selector:@selector(viewWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
+    [nc addObserver:self selector:@selector(applicationWillTerminate) name:@"applicationWillTerminate" object:nil];
     
     
     [self createPlayerInstance];
@@ -78,6 +81,14 @@
     NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     
 }
+
+// フォアグラウンド移行直前にコールされるメソッド
+- (void)applicationWillTerminate
+{
+    [self clearRemoteControllers];
+    NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
+}
+
 - (BOOL)createAudioSessionInstance
 {
     //バックグラウンドでも再生できるようにCategoryを変更.
@@ -152,28 +163,41 @@
 
 - (void) attachRemoteCommandCenter {
     //addTargetを行うことで有効化された
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    _commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 //    [commandCenter.likeCommand setEnabled:YES];
 //    [commandCenter.likeCommand addTarget:self action:@selector(onPushedLikeCommand)];
 //    [commandCenter.dislikeCommand setEnabled:YES];
 //    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
-    [commandCenter.pauseCommand setEnabled:YES];
-    [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
+    [_commandCenter.pauseCommand setEnabled:YES];
+    [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
+    [_commandCenter.nextTrackCommand setEnabled:YES];
+    [_commandCenter.nextTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+    
+    [_commandCenter.previousTrackCommand setEnabled:YES];
+    [_commandCenter.previousTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
     //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
     //    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
-    [commandCenter.skipBackwardCommand setEnabled:YES];
-    [commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
-    [commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-    [commandCenter.skipForwardCommand setEnabled:YES];
-    [commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
-    [commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
+    [_commandCenter.skipBackwardCommand setEnabled:YES];
+    [_commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
+    [_commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+    [_commandCenter.skipForwardCommand setEnabled:YES];
+    [_commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
+    [_commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
+    
+    [_commandCenter.enableLanguageOptionCommand setEnabled:YES];
+    [_commandCenter.enableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+
+    [_commandCenter.disableLanguageOptionCommand setEnabled:YES];
+    [_commandCenter.disableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+
+
     
     NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
     [[[MPRemoteCommandCenter sharedCommandCenter] changePlaybackPositionCommand]
      performSelector:@selector(setCanBeControlledByScrubbing:) withObject:shouldScrub];
     
-    [commandCenter.changePlaybackPositionCommand setEnabled:YES];
-    [commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
+    [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
+    [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
     
     //    [commandCenter.seekForwardCommand setEnabled:YES];
     //    [commandCenter.seekForwardCommand addTarget:self action:@selector(onSeekForwardCommand:)];
@@ -188,10 +212,9 @@
     NSLog(@"NaitoAVPlayerSample : onPushedplayCommand");
     [self play];
     
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    [commandCenter.pauseCommand setEnabled:YES];
-    [commandCenter.playCommand setEnabled:NO];
-    [commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
+    [_commandCenter.pauseCommand setEnabled:YES];
+    [_commandCenter.playCommand setEnabled:NO];
+    [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     
     return YES;
 }
@@ -374,6 +397,13 @@
     
 }
 
+-(void)clearRemoteControllers
+{
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    _commandCenter = nil;
+}
+
 -(void) updateRemoteControllers
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
@@ -456,5 +486,6 @@
 //controlCenterのrefはhttp://qiita.com/yimajo/items/c30c4d5f5eab06172028
 //https://forums.developer.apple.com/thread/44619
 //https://stackoverflow.com/questions/20591156/is-there-a-public-way-to-force-mpnowplayinginfocenter-to-show-podcast-controls
+//https://stackoverflow.com/questions/31463932/mpremotecommandcenter-pause-play-button-not-toggling/35081113
 
 

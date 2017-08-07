@@ -130,6 +130,11 @@
     [self play];
     [self setUpRemoteControllers];
     
+    CMTime time = CMTimeMake(1000, 200);
+    [self.player addPeriodicTimeObserverForInterval:time queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        NSLog(@"Time: %f", CMTimeGetSeconds(time));
+    }];
+    
 }
 
 - (void)createPlayPauseButton
@@ -170,34 +175,42 @@
 //    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
     [_commandCenter.pauseCommand setEnabled:YES];
     [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
-    [_commandCenter.nextTrackCommand setEnabled:YES];
-    [_commandCenter.nextTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-    
-    [_commandCenter.previousTrackCommand setEnabled:YES];
-    [_commandCenter.previousTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+//    [_commandCenter.nextTrackCommand setEnabled:YES];
+//    [_commandCenter.nextTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+//
+//    [_commandCenter.previousTrackCommand setEnabled:YES];
+//    [_commandCenter.previousTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
     //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
     //    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
-    [_commandCenter.skipBackwardCommand setEnabled:YES];
-    [_commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
-    [_commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-    [_commandCenter.skipForwardCommand setEnabled:YES];
-    [_commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
-    [_commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
+//    [_commandCenter.skipBackwardCommand setEnabled:YES];
+//    [_commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
+//    [_commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+//    [_commandCenter.skipForwardCommand setEnabled:YES];
+//    [_commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
+//    [_commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
     
-    [_commandCenter.enableLanguageOptionCommand setEnabled:YES];
-    [_commandCenter.enableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-
-    [_commandCenter.disableLanguageOptionCommand setEnabled:YES];
-    [_commandCenter.disableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+    
+//    laungageがhandler内にないため未確認?
+//    [_commandCenter.enableLanguageOptionCommand setEnabled:YES];
+//    [_commandCenter.enableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+//
+//    [_commandCenter.disableLanguageOptionCommand setEnabled:YES];
+//    [_commandCenter.disableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
+    
+    [_commandCenter.changePlaybackRateCommand setSupportedPlaybackRates:@[@(1),@(1.5),@(2)]];
+    [_commandCenter.changePlaybackRateCommand setEnabled:YES];
+    [_commandCenter.changePlaybackRateCommand addTarget:self action:@selector(onChangePlaybackRateCommand)];
 
 
     
-    NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
-    [[[MPRemoteCommandCenter sharedCommandCenter] changePlaybackPositionCommand]
-     performSelector:@selector(setCanBeControlledByScrubbing:) withObject:shouldScrub];
+
     
-    [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
-    [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
+//    NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
+//    [[[MPRemoteCommandCenter sharedCommandCenter] changePlaybackPositionCommand]
+//     performSelector:@selector(setCanBeControlledByScrubbing:) withObject:shouldScrub];
+//    
+//    [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
+//    [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
     
     //    [commandCenter.seekForwardCommand setEnabled:YES];
     //    [commandCenter.seekForwardCommand addTarget:self action:@selector(onSeekForwardCommand:)];
@@ -257,6 +270,13 @@
 {
     NSLog(@"NaitoAVPlayerSample : onPushedPreCommand");
     [self playOrPause];
+    
+    return YES;
+}
+
+-(BOOL) onChangePlaybackRateCommand
+{
+    NSLog(@"NaitoAVPlayerSample : onChangePlaybackRateCommand");
     
     return YES;
 }

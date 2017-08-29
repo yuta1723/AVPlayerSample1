@@ -106,7 +106,7 @@
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeAudioSessionRoute:) name:AVAudioSessionRouteChangeNotification object:nil];
-    _audioSession.delegate = self;
+//    _audioSession.delegate = self;
     if (!success) {
         NSLog(@"NaitoAVPlayerSample : can not active audioSession");
         /* handle the error condition */
@@ -403,16 +403,28 @@
 -(void) setUpRemoteControllers
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
+    UIImage *img_mae = [UIImage imageNamed:@"AppIcon60x60"];
+//    UIImage *img_ato;
+//    CGFloat width = 100;  // リサイズ後幅のサイズ
+//    CGFloat height = 200;  // リサイズ後高さのサイズ
+//    UIGraphicsBeginImageContext(CGSizeMake(width, height));
+//    [img_mae drawInRect:CGRectMake(0, 0, width, height)];
+//    img_ato = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
     //    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     float playbackState = 1;
-    NSDictionary *contentInfo = @{
-                                  MPMediaItemPropertyTitle:@"title",
-                                  MPMediaItemPropertyArtist:@"artist",
+    NSMutableDictionary *contentInfo = [@{
+                                  MPMediaItemPropertyTitle:@"BicBuckBunny",
+                                  MPMediaItemPropertyArtist:@"BicBuckBunnyを再生中です。",
                                   MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
                                   MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
-                                  };
+                                  }mutableCopy];
     //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    if(img_mae) {
+        MPMediaItemArtwork *albumArt = [[MPMediaItemArtwork alloc] initWithImage: img_mae];
+        [contentInfo setValue:albumArt forKey:MPMediaItemPropertyArtwork];
+    }
     [center setNowPlayingInfo:contentInfo];
     
 }

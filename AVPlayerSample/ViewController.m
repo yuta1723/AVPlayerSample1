@@ -38,6 +38,7 @@
     
     [button addTarget:self action:@selector(moveButton:)forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:button];
+//    [self initImageView];
 }
 
 -(void)moveButton:(UIButton*)button{
@@ -49,6 +50,19 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)initImageView {
+    UIImage *image1 = [UIImage imageNamed:@"AppIcon60x60"];
+    UIImageView *imageView;
+    
+    // UIImageView 初期化
+    imageView = [[UIImageView alloc] initWithImage:image1];
+    [imageView setCenter:CGPointMake(160.0f, 200.0f)];
+//    imageView.frame = CGRectMake((screenWidth/2 - 100/2), 400,image1.size.width,image1.size.height);
+    
+    // UIImageViewのインスタンスをビューに追加
+    [self.view addSubview:imageView];
 }
 
 @end

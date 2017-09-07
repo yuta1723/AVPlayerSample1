@@ -59,7 +59,9 @@
     [nc addObserver:self selector:@selector(viewDidEnterBackground) name:@"applicationDidEnterBackground" object:nil];
     [nc addObserver:self selector:@selector(viewWillEnterForeground) name:@"applicationWillEnterForeground" object:nil];
     [nc addObserver:self selector:@selector(applicationWillTerminate) name:@"applicationWillTerminate" object:nil];
-    
+    [nc addObserver:self selector:@selector(applicationWillResignActive) name:@"applicationWillResignActive" object:nil];
+    [nc addObserver:self selector:@selector(applicationDidBecomeActive) name:@"applicationDidBecomeActive" object:nil];
+
     
     [self createPlayerInstance];
     [self createPlayPauseButton];
@@ -87,6 +89,22 @@
 {
     [self clearRemoteControllers];
     NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
+}
+
+- (void)applicationWillResignActive
+{
+    NSLog(@"applicationWillResignActive");
+    [self pause];
+    
+    // Handle notification
+}
+
+- (void)applicationDidBecomeActive
+{
+    NSLog(@"applicationDidBecomeActive");
+    [self play];
+    
+    // Handle notification
 }
 
 - (BOOL)createAudioSessionInstance
@@ -180,8 +198,8 @@
 //
 //    [_commandCenter.previousTrackCommand setEnabled:YES];
 //    [_commandCenter.previousTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-    //    [commandCenter.togglePlayPauseCommand setEnabled:YES];
-    //    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
+        [_commandCenter.togglePlayPauseCommand setEnabled:YES];
+        [_commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
 //    [_commandCenter.skipBackwardCommand setEnabled:YES];
 //    [_commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
 //    [_commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
@@ -498,6 +516,12 @@
         }
     }
 }
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    // Handle Notification
+}
+
 //- (void)didChangeAudioSessionRoute:(NSNotification *)notification
 //{
 //    NSLog(@"didChangeAudioSessionRoute");

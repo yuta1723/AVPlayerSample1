@@ -70,6 +70,8 @@
 
 - (void)viewDidEnterBackground
 {
+    [self attachRemoteCommandCenter];
+    [self setUpRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
     //    [[playerView playerLayer] setPlayer:nil]; // remove the player
     NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
@@ -81,6 +83,7 @@
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
     //    [[playerView playerLayer] setPlayer:_player]; // restore the player
     NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
+    [self clearRemoteControllers];
     
 }
 
@@ -138,7 +141,6 @@
     [self createAudioSessionInstance];
     NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/mp4_content/bbb.mp4"];
 //    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
-    [self attachRemoteCommandCenter];
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
@@ -146,7 +148,6 @@
     [self.view bringSubviewToFront:_playerView];
     
     [self play];
-    [self setUpRemoteControllers];
     
     CMTime time = CMTimeMake(1000, 200);
     [self.player addPeriodicTimeObserverForInterval:time queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {

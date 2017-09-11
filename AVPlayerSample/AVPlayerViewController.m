@@ -414,8 +414,16 @@
 -(void)clearRemoteControllers
 {
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    
+    [_commandCenter.togglePlayPauseCommand setEnabled:NO];
+    [_commandCenter.togglePlayPauseCommand removeTarget:self action:@selector(onPushedtoggleCommand)];
+    [_commandCenter.playCommand setEnabled:NO];
+    [_commandCenter.playCommand removeTarget:self action:@selector(onPushedPlayCommand)];
+    [_commandCenter.pauseCommand setEnabled:NO];
+    [_commandCenter.pauseCommand removeTarget:self action:@selector(onPushedPauseCommand)];
+    _commandCenter = nil;
     [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
-//    _commandCenter = nil;
+
 }
 
 -(void) updateRemoteControllers

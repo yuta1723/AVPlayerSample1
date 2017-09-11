@@ -62,6 +62,8 @@
     
     [self createPlayerInstance];
     [self createPlayPauseButton];
+    [self attachRemoteCommandCenter];
+    [self setUpRemoteControllers];
     
 }
 
@@ -73,15 +75,15 @@
 - (void)viewDidEnterBackground
 {
     NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
-    [self attachRemoteCommandCenter];
-    [self setUpRemoteControllers];
+//    [self attachRemoteCommandCenter];
+//    [self setUpRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
 - (void)viewWillEnterForeground
 {
-    [self clearRemoteControllers];
+//    [self clearRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
     NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     

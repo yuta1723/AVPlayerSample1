@@ -50,9 +50,6 @@
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     NSLog(@"NaitoAVPlayerSample : viewDidLoad");
-    [self becomeFirstResponder];
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    
     
     //AppDelegateからのnotificateを受信する
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -68,27 +65,33 @@
     
 }
 
+//アプリバックグラウンド時に呼ぶメソッド。以下の処理を行う。
+//Eventを取得するための処理を行う。
+//コントロールセンターを有効化。
+//コントロールセンターに情報を詰め込む。
+//_playerView.layerにnilを設定(バックグラウンド再生用)
 - (void)viewDidEnterBackground
 {
-    [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
-    //    [[playerView playerLayer] setPlayer:nil]; // remove the player
     NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
+    [self attachRemoteCommandCenter];
+    [self setUpRemoteControllers];
+    [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
 }
 
 // フォアグラウンド移行直前にコールされるメソッド
 - (void)viewWillEnterForeground
 {
+    [self clearRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
-    //    [[playerView playerLayer] setPlayer:_player]; // restore the player
     NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     
 }
 
-// フォアグラウンド移行直前にコールされるメソッド
+// フォアグラウンド終了直前にコールされるメソッド
 - (void)applicationWillTerminate
 {
-    [self clearRemoteControllers];
     NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
+    [self clearRemoteControllers];
 }
 
 - (void)applicationWillResignActive
@@ -138,7 +141,6 @@
     [self createAudioSessionInstance];
     NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/mp4_content/bbb.mp4"];
 //    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
-    [self attachRemoteCommandCenter];
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
@@ -146,7 +148,6 @@
     [self.view bringSubviewToFront:_playerView];
     
     [self play];
-    [self setUpRemoteControllers];
     
     CMTime time = CMTimeMake(1000, 200);
     [self.player addPeriodicTimeObserverForInterval:time queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
@@ -185,56 +186,19 @@
 
 
 - (void) attachRemoteCommandCenter {
+
+    //以下の2行で、コントロールセンターにアプリの情報が記載された。
+    [self becomeFirstResponder];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
     //addTargetを行うことで有効化された
     _commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-//    [commandCenter.likeCommand setEnabled:YES];
-//    [commandCenter.likeCommand addTarget:self action:@selector(onPushedLikeCommand)];
-//    [commandCenter.dislikeCommand setEnabled:YES];
-//    [commandCenter.dislikeCommand addTarget:self action:@selector(onPushedDisLikeCommand)];
+    [_commandCenter.togglePlayPauseCommand setEnabled:YES];
+    [_commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
+    [_commandCenter.playCommand setEnabled:YES];
+    [_commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
     [_commandCenter.pauseCommand setEnabled:YES];
     [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
-//    [_commandCenter.nextTrackCommand setEnabled:YES];
-//    [_commandCenter.nextTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-//
-//    [_commandCenter.previousTrackCommand setEnabled:YES];
-//    [_commandCenter.previousTrackCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-        [_commandCenter.togglePlayPauseCommand setEnabled:YES];
-        [_commandCenter.togglePlayPauseCommand addTarget:self action:@selector(onPushedtoggleCommand)];
-//    [_commandCenter.skipBackwardCommand setEnabled:YES];
-//    [_commandCenter.skipBackwardCommand setPreferredIntervals:@[@30.0]];
-//    [_commandCenter.skipBackwardCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-//    [_commandCenter.skipForwardCommand setEnabled:YES];
-//    [_commandCenter.skipForwardCommand setPreferredIntervals:@[@49.0]];
-//    [_commandCenter.skipForwardCommand addTarget:self action:@selector(onSkipForwardCommand)];
-    
-    
-//    laungageがhandler内にないため未確認?
-//    [_commandCenter.enableLanguageOptionCommand setEnabled:YES];
-//    [_commandCenter.enableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-//
-//    [_commandCenter.disableLanguageOptionCommand setEnabled:YES];
-//    [_commandCenter.disableLanguageOptionCommand addTarget:self action:@selector(onSkipBackwardCommand)];
-    
-    [_commandCenter.changePlaybackRateCommand setSupportedPlaybackRates:@[@(1),@(1.5),@(2)]];
-    [_commandCenter.changePlaybackRateCommand setEnabled:YES];
-    [_commandCenter.changePlaybackRateCommand addTarget:self action:@selector(onChangePlaybackRateCommand)];
-
-
-    
-
-    
-//    NSNumber *shouldScrub = [NSNumber numberWithBool:YES];
-//    [[[MPRemoteCommandCenter sharedCommandCenter] changePlaybackPositionCommand]
-//     performSelector:@selector(setCanBeControlledByScrubbing:) withObject:shouldScrub];
-//    
-//    [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
-//    [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
-    
-    //    [commandCenter.seekForwardCommand setEnabled:YES];
-    //    [commandCenter.seekForwardCommand addTarget:self action:@selector(onSeekForwardCommand:)];
-    //
-    //    [commandCenter.seekBackwardCommand setEnabled:YES];
-    //    [commandCenter.seekBackwardCommand addTarget:self action:@selector(onSeekBackwardCommand:)];
     
 }
 
@@ -449,9 +413,9 @@
 
 -(void)clearRemoteControllers
 {
-    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    _commandCenter = nil;
+    [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
+//    _commandCenter = nil;
 }
 
 -(void) updateRemoteControllers
@@ -515,11 +479,6 @@
             [_playpausebutton setTitle:@"play" forState:UIControlStateNormal];
         }
     }
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Handle Notification
 }
 
 //- (void)didChangeAudioSessionRoute:(NSNotification *)notification

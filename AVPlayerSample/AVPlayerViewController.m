@@ -94,7 +94,7 @@
 - (void)applicationWillResignActive
 {
     NSLog(@"applicationWillResignActive");
-    [self pause];
+//    [self pause];
     
     // Handle notification
 }
@@ -102,7 +102,7 @@
 - (void)applicationDidBecomeActive
 {
     NSLog(@"applicationDidBecomeActive");
-    [self play];
+//    [self play];
     
     // Handle notification
 }

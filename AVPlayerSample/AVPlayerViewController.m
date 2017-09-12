@@ -398,9 +398,14 @@
     //    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     float playbackState = 1;
+    NSString *aplName = [[[NSBundle mainBundle] infoDictionary]
+                         objectForKey:@"CFBundleDisplayName"];
+
+    NSString *s2 = @"で再生しています。";
+    NSString *str = [NSString stringWithFormat:@"%@ %@",aplName,s2];
     NSMutableDictionary *contentInfo = [@{
-                                  MPMediaItemPropertyTitle:@"BicBuckBunny",
-                                  MPMediaItemPropertyArtist:@"BicBuckBunnyを再生中です。",
+                                  MPMediaItemPropertyTitle:@"BigBuckBunny",
+                                  MPMediaItemPropertyArtist:str,
                                   MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
                                   MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
                                   }mutableCopy];

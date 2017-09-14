@@ -32,6 +32,8 @@
     UINavigationController* navCtrl=[[UINavigationController alloc] initWithRootViewController:baseViewCtrl ];
     self.window.rootViewController = navCtrl;
 
+    navCtrl.navigationBar.tintColor = [UIColor blueColor];
+    navCtrl.navigationBar.barTintColor = [UIColor blueColor];
     
     [self.window makeKeyAndVisible];
     return YES;

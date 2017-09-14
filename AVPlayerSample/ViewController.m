@@ -22,8 +22,8 @@
     UILabel *firstLabel = [[UILabel alloc] init];
     int screenWidth = self.view.frame.size.width;
     
-    self.navigationController.navigationBar.tintColor = [UIColor blueColor];  // バーアイテムカラー
-    self.navigationController.navigationBar.barTintColor = [UIColor blueColor];  // バー背景色
+//    self.navigationController.navigationBar.tintColor = [UIColor blueColor];  // バーアイテムカラー
+//    self.navigationController.navigationBar.barTintColor = [UIColor blueColor];  // バー背景色
     
     firstLabel.frame = CGRectMake((screenWidth/2 - 150/2), 100, 150, 20);
     firstLabel.text = @"First Screen";

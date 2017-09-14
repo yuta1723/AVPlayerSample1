@@ -31,7 +31,8 @@
     //UINavigationControllerを作り、rootViewControlelrにする。
     UINavigationController* navCtrl=[[UINavigationController alloc] initWithRootViewController:baseViewCtrl ];
     self.window.rootViewController = navCtrl;
-
+    
+    navCtrl.navigationBar.barStyle = UIBarStyleBlack; //statusbarのテキストが白色になる実装
     navCtrl.navigationBar.tintColor = [UIColor blueColor];
     navCtrl.navigationBar.barTintColor = [UIColor blueColor];
     

@@ -21,6 +21,7 @@
 @property (nonatomic,strong) AVAudioSession *audioSession;
 
 @property (nonatomic,strong) UIButton *playpausebutton;
+@property (nonatomic,strong) UIButton *playbackratebutton;
 @property MPRemoteCommandCenter *commandCenter;
 
 
@@ -62,6 +63,7 @@
     
     [self createPlayerInstance];
     [self createPlayPauseButton];
+    [self createChangePlaybackrateButton];
     [self attachRemoteCommandCenter];
     [self setUpRemoteControllers];
     
@@ -83,7 +85,7 @@
 // フォアグラウンド移行直前にコールされるメソッド
 - (void)viewWillEnterForeground
 {
-//    [self clearRemoteControllers];
+    [self clearRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
     NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     
@@ -149,12 +151,17 @@
     [self.view addSubview:_playerView];
     [self.view bringSubviewToFront:_playerView];
     
+    
+    float value = 2.0f;
+    [_player setRate:value];
+
     [self play];
     
     CMTime time = CMTimeMake(1000, 200);
     [self.player addPeriodicTimeObserverForInterval:time queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         NSLog(@"Time: %f", CMTimeGetSeconds(time));
     }];
+    
     
 }
 
@@ -168,6 +175,18 @@
     [_playpausebutton setTitle:@"pause" forState:UIControlStateNormal];
     [_playpausebutton addTarget:self action:@selector(playPauseButton:)forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:_playpausebutton];
+}
+
+- (void)createChangePlaybackrateButton
+{
+    _playbackratebutton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    int screenWidth = self.view.frame.size.width;
+    _playbackratebutton.frame = CGRectMake((screenWidth/2 - 100/2), 600, 200, 30);
+    _playbackratebutton.backgroundColor = [UIColor grayColor];
+    [_playbackratebutton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_playbackratebutton setTitle:@"change rate" forState:UIControlStateNormal];
+    [_playbackratebutton addTarget:self action:@selector(changePlaybackrateButton:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:_playbackratebutton];
 }
 
 -(void)moveButton:(UIButton*)button{
@@ -186,6 +205,11 @@
     }
 }
 
+-(void)changePlaybackrateButton:(UIButton*)button{
+    if (_player.rate == 1.0) {
+        _player.rate = 1.5;
+    }
+}
 
 - (void) attachRemoteCommandCenter {
 
@@ -491,7 +515,8 @@
         if(isJointHeadphone(prevDesc.outputs)) {
             //ヘッドフォンが抜かれた
             NSLog(@"put out headphone");
-            [_playpausebutton setTitle:@"play" forState:UIControlStateNormal];
+            [_player pause];
+//            [_playpausebutton setTitle:@"play" forState:UIControlStateNormal];
         }
     }
 }

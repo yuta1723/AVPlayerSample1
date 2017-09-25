@@ -62,8 +62,9 @@
 
     
     [self createPlayerInstance];
-    [self createPlayPauseButton];
-    [self createChangePlaybackrateButton];
+    [self createInlineWebview];
+//    [self createPlayPauseButton];
+//    [self createChangePlaybackrateButton];
     [self attachRemoteCommandCenter];
     [self setUpRemoteControllers];
     
@@ -519,6 +520,25 @@
 //            [_playpausebutton setTitle:@"play" forState:UIControlStateNormal];
         }
     }
+}
+
+-(void) createInlineWebview {
+    UIWebView *wv = [[UIWebView alloc] init];
+    wv.delegate = self;
+    wv.frame = CGRectMake(0,320,self.view.frame.size.width,300);
+    wv.scalesPageToFit = YES;
+    [self.view addSubview:wv];
+    
+    NSURL *url = [NSURL URLWithString:@"http://54.248.249.96/hama3/overlay_webview/demo/mori4_demo.html"];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    [wv loadRequest:req];
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSURL *URL = request.URL;
+    NSLog(@"URL=%@", URL.absoluteString);
+    
+    return true;
 }
 
 @end

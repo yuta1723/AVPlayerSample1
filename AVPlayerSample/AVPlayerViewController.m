@@ -521,19 +521,6 @@
     }
 }
 
-//- (void)didChangeAudioSessionRoute:(NSNotification *)notification
-//{
-//    NSLog(@"didChangeAudioSessionRoute");
-//    for (AVAudioSessionPortDescription *desc in [[[AVAudioSession sharedInstance] currentRoute] outputs]) {
-//        if ([desc.portType isEqual:AVAudioSessionPortHeadphones]) {
-//            NSLog(@"ヘッドホン刺さった");
-//        } else {
-//            NSLog(@"ヘッドホン抜けた");
-//        }
-//    }
-//}
-
-
 @end
 
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/

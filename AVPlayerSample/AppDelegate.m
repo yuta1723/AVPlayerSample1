@@ -42,7 +42,7 @@
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    NSLog(@"applicationWillEnterForeground");
+    NSLog(@"applicationWillResignActive");
     NSNotification* n = [NSNotification notificationWithName:@"applicationWillResignActive" object:self];
     // 通知実行
     [[NSNotificationCenter defaultCenter] postNotification:n];

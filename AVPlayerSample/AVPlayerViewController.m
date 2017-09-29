@@ -62,7 +62,7 @@
 
     
     [self createPlayerInstance];
-    [self createInlineWebview];
+//    [self createInlineWebview];
 //    [self createPlayPauseButton];
 //    [self createChangePlaybackrateButton];
     [self attachRemoteCommandCenter];
@@ -77,7 +77,7 @@
 //_playerView.layerにnilを設定(バックグラウンド再生用)
 - (void)viewDidEnterBackground
 {
-    NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
+//    NSLog(@"NaitoAVPlayerSample : viewDidEnterBackground");
 //    [self attachRemoteCommandCenter];
 //    [self setUpRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:nil];
@@ -88,20 +88,20 @@
 {
     [self clearRemoteControllers];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
-    NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
+//    NSLog(@"NaitoAVPlayerSample : viewWillEnterForeground");
     
 }
 
 // フォアグラウンド終了直前にコールされるメソッド
 - (void)applicationWillTerminate
 {
-    NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
+//    NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
     [self clearRemoteControllers];
 }
 
 - (void)applicationWillResignActive
 {
-    NSLog(@"applicationWillResignActive");
+//    NSLog(@"applicationWillResignActive");
 //    [self pause];
     
     // Handle notification
@@ -109,7 +109,7 @@
 
 - (void)applicationDidBecomeActive
 {
-    NSLog(@"applicationDidBecomeActive");
+//    NSLog(@"applicationDidBecomeActive");
 //    [self play];
     
     // Handle notification
@@ -131,6 +131,7 @@
     
     NSError *activationError = nil;
     success = [_audioSession setActive:YES error:&activationError];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didInterruptionAudioSession:) name:AVAudioSessionInterruptionNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeAudioSessionRoute:) name:AVAudioSessionRouteChangeNotification object:nil];
 //    _audioSession.delegate = self;
     if (!success) {
@@ -491,6 +492,25 @@
     
 }
 
+- (void)didInterruptionAudioSession:(NSNotification *)notification
+{
+    // NSNotificationのUserInfoを取得
+    NSDictionary* userInfo = notification.userInfo;
+    // 割り込みタイプを取得
+    AVAudioSessionInterruptionType audioSessionInterruptionType = [userInfo[@"AVAudioSessionInterruptionTypeKey"] longValue];
+    switch (audioSessionInterruptionType) {
+        case AVAudioSessionInterruptionTypeBegan:
+            NSLog(@"割り込みの開始！");
+            NSLog(@"割り込みが入ったので音声が停止された、UIを停z止状態のものに変更する。");
+            break;
+        case AVAudioSessionInterruptionTypeEnded:
+            NSLog(@"割り込みの終了！");
+            break;
+        default:
+            break;
+    }
+}
+
 - (void)didChangeAudioSessionRoute:(NSNotification *)notification
 {
     NSLog(@"didChangeAudioSessionRoute");
@@ -536,7 +556,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *URL = request.URL;
-    NSLog(@"URL=%@", URL.absoluteString);
+//    NSLog(@"URL=%@", URL.absoluteString);
     
     return true;
 }

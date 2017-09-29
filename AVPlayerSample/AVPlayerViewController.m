@@ -278,62 +278,12 @@
     return YES;
 }
 
--(BOOL) onPushedPreCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onPushedPreCommand");
-    [self playOrPause];
-    
-    return YES;
-}
-
--(BOOL) onChangePlaybackRateCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onChangePlaybackRateCommand");
-    
-    return YES;
-}
-
--(BOOL) onSkipBackwardCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onSkipBackwardCommand");
-    [self skipBackward];
-    
-    return YES;
-}
-
--(BOOL) onSkipForwardCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onSkipForwardCommand");
-    [self skipForward];
-    
-    return YES;
-}
-
--(BOOL) onSeekBackwardCommand:(MPSkipIntervalCommandEvent *)skipEvent
-{
-    NSLog(@"NaitoAVPlayerSample : onSkipBackwardCommand");
-    NSLog(@"NaitoAVPlayerSample : skip by %f",skipEvent.interval);
-    
-    [self seekBackward:skipEvent.interval];
-    
-    return YES;
-}
-
 -(BOOL) onChangePositionCommand:(MPChangePlaybackPositionCommandEvent *)event
 {
     NSLog(@"NaitoAVPlayerSample : onChangePositionCommand");
     NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
     
     [self seekBackward:event.positionTime];
-    return YES;
-}
-
--(BOOL) onSeekForwardCommand:(MPSkipIntervalCommandEvent *)skipEvent
-{
-    NSLog(@"NaitoAVPlayerSample : onSeekForwardCommand");
-    NSLog(@"NaitoAVPlayerSample : skip by %f",skipEvent.interval);
-    [self seekForward:skipEvent.interval];
-    
     return YES;
 }
 
@@ -458,25 +408,6 @@
     _commandCenter = nil;
     [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
 
-}
-
--(void) updateRemoteControllers
-{
-    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
-    //    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
-    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    float playbackState = 1;
-    if (_player.rate == 0.0) {
-        playbackState = 0;
-    }
-    NSDictionary *contentInfo = @{
-                                  MPMediaItemPropertyTitle:@"title",
-                                  MPMediaItemPropertyArtist:@"artist",
-                                  MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
-                                  MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
-                                  };
-    //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-    [center setNowPlayingInfo:contentInfo];
 }
 
 - (void)beginInterruption

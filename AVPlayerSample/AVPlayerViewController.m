@@ -145,7 +145,7 @@
 - (void)createPlayerInstance
 {
     [self createAudioSessionInstance];
-    NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/mp4_content/bbb.mp4"];
+    NSURL *url =[NSURL URLWithString:@"https://tsg01.uliza.jp/ulizahtml5/content/bbb_100sec_hls/playlist.m3u8"];
 //    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
@@ -283,7 +283,7 @@
     NSLog(@"NaitoAVPlayerSample : onChangePositionCommand");
     NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
     
-    [self seekBackward:event.positionTime];
+    [self seekTo:event.positionTime];
     return YES;
 }
 
@@ -311,24 +311,13 @@
     }
 }
 
-- (void)seekForward : (long)seekPosition
+- (void)seekTo : (long)seekPosition
 {
-    NSLog(@"NaitoAVPlayerSample : seekForward");
-    double currentPosition = CMTimeGetSeconds(_player.currentTime);
-    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
-    CMTime time = CMTimeMakeWithSeconds(seekPosition, NSEC_PER_SEC);
-    [_player seekToTime:time];
-}
-
-- (void)seekBackward : (long)seekPosition
-{
-    NSLog(@"NaitoAVPlayerSample : seekBackward");
+    NSLog(@"NaitoAVPlayerSample : seekTo");
     double currentPosition = CMTimeGetSeconds([_player currentTime]);
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
+    NSLog(@"NaitoAVPlayerSample : seekPosition:%ld", seekPosition);
     CMTime time = CMTimeMakeWithSeconds(seekPosition, NSEC_PER_SEC);
     [_player seekToTime:time];
 }

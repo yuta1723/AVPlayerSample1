@@ -214,7 +214,7 @@
 }
 
 - (void) attachRemoteCommandCenter {
-
+    
     //以下の2行で、コントロールセンターにアプリの情報が記載された。
     [self becomeFirstResponder];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -228,6 +228,8 @@
     [_commandCenter.pauseCommand setEnabled:YES];
     [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     
+    [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
+    [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
 }
 
 -(BOOL) onPushedPlayCommand
@@ -323,7 +325,6 @@
     NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
     
     [self seekBackward:event.positionTime];
-    
     return YES;
 }
 

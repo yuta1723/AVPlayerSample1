@@ -23,9 +23,11 @@
 @property (nonatomic,strong) UIButton *playpausebutton;
 @property (nonatomic,strong) UIButton *playbackratebutton;
 @property MPRemoteCommandCenter *commandCenter;
+@property NSMutableDictionary *contentInfo;
 
 
 @property (nonatomic) BOOL isFullScreen;
+@property (nonatomic) BOOL isSetControlCenter;
 
 @end
 
@@ -230,6 +232,7 @@
     
     [_commandCenter.changePlaybackPositionCommand setEnabled:YES];
     [_commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(onChangePositionCommand:)];
+    
 }
 
 -(BOOL) onPushedPlayCommand
@@ -241,19 +244,7 @@
     [_commandCenter.playCommand setEnabled:NO];
     [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     
-    return YES;
-}
-
--(BOOL) onPushedLikeCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onPushedLikeCommand");
-    
-    return YES;
-}
-
--(BOOL) onPushedDisLikeCommand
-{
-    NSLog(@"NaitoAVPlayerSample : onPushedLikeCommand");
+    [self updateCurrentTimeForControlCenter];
     
     return YES;
 }
@@ -268,6 +259,8 @@
     [commandCenter.pauseCommand setEnabled:NO];
     [commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
     
+    [self updateCurrentTimeForControlCenter];
+    
     return YES;
 }
 
@@ -275,6 +268,7 @@
 {
     NSLog(@"NaitoAVPlayerSample : onPushedtoggleCommand");
     [self playOrPause];
+    [self updateCurrentTimeForControlCenter];
     return YES;
 }
 
@@ -326,14 +320,8 @@
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
     UIImage *img_mae = [UIImage imageNamed:@"AppIcon60x60"];
-//    UIImage *img_ato;
-//    CGFloat width = 100;  // リサイズ後幅のサイズ
-//    CGFloat height = 200;  // リサイズ後高さのサイズ
-//    UIGraphicsBeginImageContext(CGSizeMake(width, height));
-//    [img_mae drawInRect:CGRectMake(0, 0, width, height)];
-//    img_ato = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    //    NSMutableDictionary *playingInfo = [NSMutableDictionary dictionaryWithDictionary:center.nowPlayingInfo];
+    double currentPosition = CMTimeGetSeconds([_player currentTime]);
     double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
     float playbackState = 1;
     NSString *aplName = [[[NSBundle mainBundle] infoDictionary]
@@ -341,19 +329,28 @@
 
     NSString *s2 = @"で再生しています。";
     NSString *str = [NSString stringWithFormat:@"%@ %@",aplName,s2];
-    NSMutableDictionary *contentInfo = [@{
+    _contentInfo = [@{
                                   MPMediaItemPropertyTitle:@"BigBuckBunny",
                                   MPMediaItemPropertyArtist:str,
                                   MPMediaItemPropertyPlaybackDuration:[NSNumber numberWithDouble:duration],
+                                  MPNowPlayingInfoPropertyElapsedPlaybackTime:[NSNumber numberWithDouble:currentPosition],
                                   MPNowPlayingInfoPropertyPlaybackRate:[NSNumber numberWithFloat:playbackState]
                                   }mutableCopy];
     //    [playingInfo setObject:[NSNumber numberWithFloat:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
     if(img_mae) {
         MPMediaItemArtwork *albumArt = [[MPMediaItemArtwork alloc] initWithImage: img_mae];
-        [contentInfo setValue:albumArt forKey:MPMediaItemPropertyArtwork];
+        [_contentInfo setValue:albumArt forKey:MPMediaItemPropertyArtwork];
     }
-    [center setNowPlayingInfo:contentInfo];
-    
+    [center setNowPlayingInfo:_contentInfo];
+    _isSetControlCenter = TRUE;
+}
+
+-(void) updateCurrentTimeForControlCenter
+{
+    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
+    double currentPosition = CMTimeGetSeconds([_player currentTime]);
+    [_contentInfo setValue:[NSNumber numberWithDouble:currentPosition] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [center setNowPlayingInfo:_contentInfo];
 }
 
 -(void)clearRemoteControllers
@@ -368,6 +365,7 @@
     [_commandCenter.pauseCommand removeTarget:self action:@selector(onPushedPauseCommand)];
     _commandCenter = nil;
     [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
+    _isSetControlCenter = FALSE;
 
 }
 

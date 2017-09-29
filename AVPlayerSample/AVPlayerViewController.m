@@ -311,34 +311,6 @@
     }
 }
 
-- (void)skipForward
-{
-    NSLog(@"NaitoAVPlayerSample : skipForward");
-    double currentPosition = CMTimeGetSeconds(_player.currentTime);
-    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
-    CMTime time = CMTimeMakeWithSeconds(duration - 10 , NSEC_PER_SEC);
-    if (currentPosition + 15 < duration) {
-        time = CMTimeMakeWithSeconds(currentPosition + 15, NSEC_PER_SEC);
-    }
-    [_player seekToTime:time];
-}
-
-- (void)skipBackward
-{
-    NSLog(@"NaitoAVPlayerSample : skipBackward");
-    double currentPosition = CMTimeGetSeconds([_player currentTime]);
-    double duration = CMTimeGetSeconds(_player.currentItem.asset.duration);
-    NSLog(@"NaitoAVPlayerSample : currentPosition:%f", currentPosition);
-    NSLog(@"NaitoAVPlayerSample : duration:%f", duration);
-    CMTime time = CMTimeMakeWithSeconds(0, NSEC_PER_SEC);
-    if (currentPosition - 15 > 0) {
-        time = CMTimeMakeWithSeconds(currentPosition - 15, NSEC_PER_SEC);
-    }
-    [_player seekToTime:time];
-}
-
 - (void)seekForward : (long)seekPosition
 {
     NSLog(@"NaitoAVPlayerSample : seekForward");

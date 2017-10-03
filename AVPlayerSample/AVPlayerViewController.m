@@ -62,6 +62,12 @@
     [nc addObserver:self selector:@selector(applicationWillResignActive) name:@"applicationWillResignActive" object:nil];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive) name:@"applicationDidBecomeActive" object:nil];
 
+    //再生完了のイベントを登録する。
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onVideoEnd)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+
     
     [self createPlayerInstance];
 //    [self createInlineWebview];
@@ -99,6 +105,9 @@
 {
 //    NSLog(@"NaitoAVPlayerSample : applicationWillTerminate");
     [self clearRemoteControllers];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
 }
 
 - (void)applicationWillResignActive
@@ -452,6 +461,13 @@
     return true;
 }
 
+-(void)onVideoEnd {
+    NSLog(@"enter onVideoEnd");
+    [self clearRemoteControllers];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+}
 @end
 
 //実装はここを参照http://dev.classmethod.jp/smartphone/ios-video/

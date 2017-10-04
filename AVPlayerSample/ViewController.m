@@ -43,6 +43,8 @@
 
 -(void)moveButton:(UIButton*)button{
     AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
+    NSURL *url =[NSURL URLWithString:@"http://210.148.141.57/hls/video/dvr/livestream01_2/playlist.m3u8"];
+    [secondVC setPlayUrl:url];
     [self.navigationController pushViewController:secondVC animated:YES];
 //    [self presentViewController: secondVC animated:YES completion: nil];
 }

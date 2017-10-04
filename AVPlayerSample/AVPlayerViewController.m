@@ -156,8 +156,8 @@
 - (void)createPlayerInstance
 {
     [self createAudioSessionInstance];
-    NSURL *url =[NSURL URLWithString:@"https://tsg01.uliza.jp/ulizahtml5/content/bbb_100sec_hls/playlist.m3u8"];
 //    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
+    NSURL *url = _PlayUrl;
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];

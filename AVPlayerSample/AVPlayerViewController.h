@@ -11,6 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface AVPlayerViewController : UIViewController
+@property(nonatomic)NSURL *PlayUrl;
 
 //@interface ViewController : UIView
 @end

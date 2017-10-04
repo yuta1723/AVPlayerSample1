@@ -10,6 +10,7 @@
 #import "AVPlayerViewController.h"
 
 @interface ViewController ()
+@property (nonatomic) int screenWidth;
 
 @end
 
@@ -20,33 +21,56 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
 
     UILabel *firstLabel = [[UILabel alloc] init];
-    int screenWidth = self.view.frame.size.width;
+    _screenWidth = self.view.frame.size.width;
     
 //    self.navigationController.navigationBar.tintColor = [UIColor blueColor];  // バーアイテムカラー
 //    self.navigationController.navigationBar.barTintColor = [UIColor blueColor];  // バー背景色
     
-    firstLabel.frame = CGRectMake((screenWidth/2 - 150/2), 100, 150, 20);
+    firstLabel.frame = CGRectMake((_screenWidth/2 - 150/2), 100, 150, 20);
     firstLabel.text = @"First Screen";
     firstLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:firstLabel];
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    button.frame = CGRectMake((screenWidth/2 - 100/2), 200, 100, 30);
-    button.backgroundColor = [UIColor grayColor];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitle:@"Move Scene" forState:UIControlStateNormal];
-    
-    [button addTarget:self action:@selector(moveButton:)forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:button];
+    [self createMp4Button];
+    [self createHLSButton];
+
+
 //    [self initImageView];
 }
 
--(void)moveButton:(UIButton*)button{
+-(void)createMp4Button {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake((_screenWidth/2 - 100/2), 200, 100, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"MP4 button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackMp4Content:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
+-(void)createHLSButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake((_screenWidth/2 - 100/2), 400, 100, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"HLS button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackHLSContent:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
+-(void)playbackMp4Content:(UIButton*)button{
     AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
     NSURL *url =[NSURL URLWithString:@"http://210.148.141.57/hls/video/dvr/livestream01_2/playlist.m3u8"];
     [secondVC setPlayUrl:url];
     [self.navigationController pushViewController:secondVC animated:YES];
 //    [self presentViewController: secondVC animated:YES completion: nil];
+}
+
+-(void)playbackHLSContent:(UIButton*)button{
+    AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
+    NSURL *url =[NSURL URLWithString:@"http://210.148.141.57/hls/video/dvr/livestream01_2/playlist.m3u8"];
+    [secondVC setPlayUrl:url];
+    [self.navigationController pushViewController:secondVC animated:YES];
+    //    [self presentViewController: secondVC animated:YES completion: nil];
 }
 
 - (void)didReceiveMemoryWarning {

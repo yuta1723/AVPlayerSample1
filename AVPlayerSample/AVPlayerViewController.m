@@ -253,7 +253,7 @@
     [_commandCenter.playCommand setEnabled:NO];
     [_commandCenter.pauseCommand addTarget:self action:@selector(onPushedPauseCommand)];
     
-    [self updateCurrentTimeForControlCenter];
+    [self updateCurrentTimeInControlCenter];
     
     return YES;
 }
@@ -267,7 +267,7 @@
     [_commandCenter.pauseCommand setEnabled:NO];
     [_commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
     
-    [self updateCurrentTimeForControlCenter];
+    [self updateCurrentTimeInControlCenter];
     
     return YES;
 }
@@ -276,7 +276,7 @@
 {
     NSLog(@"NaitoAVPlayerSample : onPushedtoggleCommand");
     [self playOrPause];
-    [self updateCurrentTimeForControlCenter];
+    [self updateCurrentTimeInControlCenter];
     return YES;
 }
 
@@ -286,6 +286,9 @@
     NSLog(@"NaitoAVPlayerSample : skip by %f",event.positionTime);
     
     [self seekTo:event.positionTime];
+    if (_isSetControlCenter) {
+        [self updateCurrentTimeInControlCenterBySeek:event.positionTime];
+    }
     return YES;
 }
 
@@ -353,11 +356,18 @@
     _isSetControlCenter = TRUE;
 }
 
--(void) updateCurrentTimeForControlCenter
+-(void) updateCurrentTimeInControlCenter
 {
     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
     double currentPosition = CMTimeGetSeconds([_player currentTime]);
     [_contentInfo setValue:[NSNumber numberWithDouble:currentPosition] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [center setNowPlayingInfo:_contentInfo];
+}
+
+-(void) updateCurrentTimeInControlCenterBySeek :(long)seekPosition
+{
+    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
+    [_contentInfo setValue:[NSNumber numberWithLong:seekPosition] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
     [center setNowPlayingInfo:_contentInfo];
 }
 

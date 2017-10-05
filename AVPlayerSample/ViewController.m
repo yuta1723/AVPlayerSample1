@@ -30,42 +30,102 @@
     firstLabel.text = @"First Screen";
     firstLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:firstLabel];
-    [self createMp4Button];
-    [self createHLSButton];
-
+    [self initView];
 
 //    [self initImageView];
 }
 
--(void)createMp4Button {
+-(void)initView {
+    [self createMp4ShortButton];
+    [self createMp4LongButton];
+    [self createHLSShortButton];
+    [self createHLSLongButton];
+    [self createHLSLiveButton];
+}
+
+-(void)createMp4ShortButton {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    button.frame = CGRectMake((_screenWidth/2 - 100/2), 200, 100, 30);
+    button.frame = CGRectMake((_screenWidth/2 - 200/2), 200, 200, 30);
     button.backgroundColor = [UIColor grayColor];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitle:@"MP4 button" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(playbackMp4Content:)forControlEvents:UIControlEventTouchDown];
+    [button setTitle:@"MP4 Short button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackMp4ShortContent:)forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:button];
 }
 
--(void)createHLSButton {
+-(void)createMp4LongButton {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    button.frame = CGRectMake((_screenWidth/2 - 100/2), 400, 100, 30);
+    button.frame = CGRectMake((_screenWidth/2 - 200/2), 250, 200, 30);
     button.backgroundColor = [UIColor grayColor];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitle:@"HLS button" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(playbackHLSContent:)forControlEvents:UIControlEventTouchDown];
+    [button setTitle:@"MP4 Long button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackMp4LongContent:)forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:button];
 }
 
--(void)playbackMp4Content:(UIButton*)button{
+-(void)createHLSShortButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake((_screenWidth/2 - 200/2), 300, 200, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"HLS Short button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackHLSShortContent:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
+-(void)createHLSLongButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake((_screenWidth/2 - 200/2), 350, 200, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"HLS Long button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackHLSLongContent:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
+-(void)createHLSLiveButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake((_screenWidth/2 - 200/2), 400, 200, 30);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:@"HLS Live button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(playbackHLSLiveContent:)forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+}
+
+-(void)playbackMp4ShortContent:(UIButton*)button{
     AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
-    NSURL *url =[NSURL URLWithString:@"http://210.148.141.57/hls/video/dvr/livestream01_2/playlist.m3u8"];
+    NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/hama3/content/sintel_720p.mp4"];
     [secondVC setPlayUrl:url];
     [self.navigationController pushViewController:secondVC animated:YES];
 //    [self presentViewController: secondVC animated:YES completion: nil];
 }
 
--(void)playbackHLSContent:(UIButton*)button{
+-(void)playbackMp4LongContent:(UIButton*)button{
+    AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
+    NSURL *url =[NSURL URLWithString:@"http://54.248.249.96/hama3/content/subtitle/MED_Education_67min.mp4"];
+    [secondVC setPlayUrl:url];
+    [self.navigationController pushViewController:secondVC animated:YES];
+    //    [self presentViewController: secondVC animated:YES completion: nil];
+}
+
+-(void)playbackHLSShortContent:(UIButton*)button{
+    AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
+    NSURL *url =[NSURL URLWithString:@"https://tsg01.uliza.jp/ulizahtml5/content/bbb_100sec_hls/playlist.m3u8"];
+    [secondVC setPlayUrl:url];
+    [self.navigationController pushViewController:secondVC animated:YES];
+    //    [self presentViewController: secondVC animated:YES completion: nil];
+}
+
+-(void)playbackHLSLongContent:(UIButton*)button{
+    AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
+    NSURL *url =[NSURL URLWithString:@"https://www2.uliza.jp/IF/iphone/iPhonePlaylist.m3u8?v=MED_Education_67min_up_739_20170606115100521&p=6230&d=1560&n=4777&cpv=1&previewflag=1&if=1&logging=1"];
+    [secondVC setPlayUrl:url];
+    [self.navigationController pushViewController:secondVC animated:YES];
+    //    [self presentViewController: secondVC animated:YES completion: nil];
+}
+
+-(void)playbackHLSLiveContent:(UIButton*)button{
     AVPlayerViewController *secondVC = [[AVPlayerViewController alloc] init];
     NSURL *url =[NSURL URLWithString:@"http://210.148.141.57/hls/video/dvr/livestream01_2/playlist.m3u8"];
     [secondVC setPlayUrl:url];

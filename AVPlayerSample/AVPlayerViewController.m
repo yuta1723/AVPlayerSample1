@@ -263,10 +263,9 @@
     NSLog(@"NaitoAVPlayerSample : onPushedPauseCommand");
     [self pause];
     
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    [commandCenter.playCommand setEnabled:YES];
-    [commandCenter.pauseCommand setEnabled:NO];
-    [commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
+    [_commandCenter.playCommand setEnabled:YES];
+    [_commandCenter.pauseCommand setEnabled:NO];
+    [_commandCenter.playCommand addTarget:self action:@selector(onPushedPlayCommand)];
     
     [self updateCurrentTimeForControlCenter];
     

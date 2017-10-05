@@ -158,6 +158,7 @@
     [self createAudioSessionInstance];
 //    NSURL *url = [NSURL URLWithString:@"http://domain/path/contents.mp4"];
     NSURL *url = _PlayUrl;
+    NSLog([url absoluteString]);
     _player = [[AVPlayer alloc]initWithURL:url];
     _playerView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0,20,self.view.frame.size.width,300)];
     [(AVPlayerLayer*)_playerView.layer setPlayer:_player];
